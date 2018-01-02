@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:channel="http://www.hisun.com/schema/channel"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.hisun.com/schema/channel http://www.hisun.com/schema/channel/channel.xsd">
+
+    <channel:service name="ALIPAY" charset="UTF-8" >
+        
+        <!-- 统一收单线下交易预创建，用户扫码，聚合支付 -->
+        <channel:connector id="tradePreCreate" protocol="http" url="https://openapi.alipaydev.com/gateway.do" default="false" dateTypeName="QUERY_STRING" requestMode="GET" charset="UTF-8" />
+
+        <channel:container>
+
+            <!-- 统一收单线下交易预创建，用户扫码，聚合支付 -->
+            <channel:processor name="tradePreCreate" marshal-class="com.hisun.lemon.cpi.alipay.ebankpay.req.AlipayAcquirePrecreateRequest"
+            unmarshal-class="com.hisun.lemon.cpi.alipay.ebankpay.rsp.AlipayPrecreateResponse" connector-id="tradePreCreate" />
+
+            <!-- 此处的handler-filter对全部processor生效 -->
+            <channel:handler-filter class="com.hisun.channel.service.child.filter.MonitorHandlerFilter" />
+            <!-- <channel:handler-filter class="com.hisun.channel.service.child.filter.MessageContext" /> --> 
+
+        </channel:container>
+    </channel:service>
+</beans>
